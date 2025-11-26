@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+<h1>Pending Events</h1>
+<table border="1">
+    <tr>
+        <th>Title</th>
+        <th>Organizer</th>
+        <th>Date</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="event : ${pendingEvents}">
+        <td th:text="${event.title}"></td>
+        <td th:text="${event.organizer.name}"></td>
+        <td th:text="${event.eventDate}"></td>
+        <td>
+            <form th:action="@{'/admin/event/approve/' + ${event.id}}" method="post" style="display:inline">
+                <button type="submit">Approve</button>
+            </form>
+            <form th:action="@{'/admin/event/refuse/' + ${event.id}}" method="post" style="display:inline">
+                <button type="submit">Refuse</button>
+            </form>
+        </td>
+    </tr>
+</table>
+<hr/>
+<h2>User Role Management</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Current Role</th>
+        <th>Change Role</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${allUsers}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.role.name}"></td>
+
+        <td>
+            <form th:action="@{/admin/user/updateRole/{userId}(userId=${user.id})}" method="post">
+                <select name="roleName" required>
+                    <option th:each="role : ${allRoles}"
+                            th:value="${role.name}"
+                            th:text="${role.name}"
+                            th:selected="${role.id == user.role.id}">
+                    </option>
+                </select>
+                <button type="submit">Update</button>
+                <button type="submit"
+                        class="btn btn-danger"
+                        onclick="return confirm('WARNING: Are you sure you want to permanently delete user ' + '[[${user.email}]]' + '? This action cannot be undone and will remove all associated data.');">
+                    Delete User
+                </button>
+            </form>
+        </td>
+    </tr>
+
+    </tbody>
+</table>
+</body>
+</html>

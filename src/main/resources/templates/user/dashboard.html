@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Dashboard</title>
+</head>
+<body>
+<h1>Available Events</h1>
+<table border="1">
+    <tr>
+        <th>Title</th>
+        <th>Category</th>
+        <th>Date</th>
+        <th>Location</th>
+        <th>Capacity</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="event : ${events}">
+        <td th:text="${event.title}"></td>
+        <td th:text="${event.category.name}"></td>
+        <td th:text="${event.eventDate}"></td>
+        <td th:text="${event.location}"></td>
+        <td th:text="${event.capacity}"></td>
+        <td>
+            <a th:href="@{'/user/event/' + ${event.id}}">View</a>
+            <form th:action="@{'/user/event/book/' + ${event.id}}" method="post" style="display:inline">
+                <button type="submit" th:disabled="${event.capacity == 0}">Book</button>
+            </form>
+        </td>
+    </tr>
+</table>
+<a href="/user/bookings">My Bookings</a>
+</body>
+</html>

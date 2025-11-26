@@ -1,0 +1,19 @@
+<h1>My Events</h1>
+<a href="/organizer/event/new">Create New Event</a>
+<table border="1">
+    <tr>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="event : ${myEvents}">
+        <td th:text="${event.title}"></td>
+        <td th:text="${event.status}"></td>
+        <td th:text="${event.eventDate}"></td>
+        <td>
+            <a th:href="@{'/organizer/event/edit/' + ${event.id}}">Edit</a>
+            <a th:href="@{'/organizer/event/delete/' + ${event.id}}">Delete</a>
+        </td>
+    </tr>
+</table>

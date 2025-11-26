@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create New Event</title>
+</head>
+<body>
+<h1>Create New Event</h1>
+
+<form th:action="@{/organizer/event/save}" method="post" th:object="${event}">
+
+    <div>
+        <label for="title">Title:</label>
+        <input type="text" id="title" th:field="*{title}" required />
+    </div>
+    <div>
+        <label for="category">Category:</label>
+        <select id="category" th:field="*{category}" required>
+            <option value="">-- Select Category --</option>
+            <option th:each="cat : ${categories}"
+                    th:value="${cat.id}"
+                    th:text="${cat.name}">
+            </option>
+        </select>
+    </div>
+    <div>
+        <label for="description">Description:</label>
+        <textarea id="description" th:field="*{description}" rows="5" required></textarea>
+    </div>
+
+    <div>
+        <label for="event_date_input">Date & Time:</label>
+        <input type="datetime-local" id="event_date_input" th:field="*{eventDate}" required />
+    </div>
+
+    <div>
+        <label for="location">Location:</label>
+        <input type="text" id="location" th:field="*{location}" required />
+    </div>
+
+    <div>
+        <label for="capacity">Max Capacity:</label>
+        <input type="number" id="capacity" th:field="*{capacity}" min="1" required />
+    </div>
+
+
+    <button type="submit">Publish Event</button>
+</form>
+</body>
+</html>

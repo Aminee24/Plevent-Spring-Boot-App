@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${event.title}">Event Details</title>
+</head>
+<body>
+<h1 th:text="${event.title}"></h1>
+<p><strong>Category:</strong> <span th:text="${event.category.name}"></span></p>
+<p><strong>Date:</strong> <span th:text="${event.eventDate}"></span></p>
+<p><strong>Location:</strong> <span th:text="${event.location}"></span></p>
+<p><strong>Description:</strong> <span th:text="${event.description}"></span></p>
+<p><strong>Capacity left:</strong> <span th:text="${event.capacity}"></span></p>
+
+<form th:action="@{'/user/event/book/' + ${event.id}}" method="post">
+    <button type="submit" th:disabled="${event.capacity == 0}">Book Event</button>
+</form>
+
+<a href="/user/dashboard">Back to Dashboard</a>
+</body>
+</html>
