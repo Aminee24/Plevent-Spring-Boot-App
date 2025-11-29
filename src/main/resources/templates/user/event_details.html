@@ -1,20 +1,86 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
 <head>
     <title th:text="${event.title}">Event Details</title>
 </head>
 <body>
-<h1 th:text="${event.title}"></h1>
-<p><strong>Category:</strong> <span th:text="${event.category.name}"></span></p>
-<p><strong>Date:</strong> <span th:text="${event.eventDate}"></span></p>
-<p><strong>Location:</strong> <span th:text="${event.location}"></span></p>
-<p><strong>Description:</strong> <span th:text="${event.description}"></span></p>
-<p><strong>Capacity left:</strong> <span th:text="${event.capacity}"></span></p>
 
-<form th:action="@{'/user/event/book/' + ${event.id}}" method="post">
-    <button type="submit" th:disabled="${event.capacity == 0}">Book Event</button>
-</form>
+<div layout:fragment="content">
 
-<a href="/user/dashboard">Back to Dashboard</a>
+    <div class="row">
+
+        <div class="col-lg-8">
+            <h1 class="mb-3 text-primary" th:text="${event.title}">Event Title</h1>
+
+            <h5 class="mb-4">
+                <span class="badge bg-secondary text-uppercase" th:text="${event.category.name}">Category</span>
+            </h5>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3 mb-md-0">
+                            <i class="bi bi-calendar-check-fill text-info me-2"></i>
+                            <strong>Date & Time:</strong>
+                            <p class="mb-0 fw-bold" th:text="${#temporals.format(event.eventDate, 'EEE, dd MMM yyyy')}"></p>
+                            <p class="mb-0 small text-muted" th:text="${#temporals.format(event.eventDate, 'hh:mm a')}"></p>
+                        </div>
+
+                        <div class="col-md-4 mb-3 mb-md-0">
+                            <i class="bi bi-geo-alt-fill text-info me-2"></i>
+                            <strong>Location:</strong>
+                            <p class="mb-0 fw-bold" th:text="${event.location}"></p>
+                        </div>
+
+                        <div class="col-md-4">
+                            <i class="bi bi-person-badge-fill text-info me-2"></i>
+                            <strong>Capacity Left:</strong>
+                            <p class="mb-0 fw-bold" th:text="${event.capacity}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="mt-5 mb-3">About the Event</h4>
+            <p class="lead" th:text="${event.description}"></p>
+
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card bg-light shadow-sm sticky-top" style="top: 80px;">
+                <div class="card-body text-center">
+
+                    <h5 th:if="${event.capacity > 0}" class="card-title text-success">
+                        Spots are Available!
+                    </h5>
+                    <h5 th:if="${event.capacity == 0}" class="card-title text-danger">
+                        Sold Out!
+                    </h5>
+
+                    <p class="text-muted small">Reserve your spot now.</p>
+
+                    <form th:action="@{'/user/event/book/' + ${event.id}}" method="post">
+                        <button type="submit"
+                                class="btn btn-lg w-100 mt-2"
+                                th:classappend="${event.capacity == 0} ? 'btn-secondary disabled' : 'btn-success'"
+                                th:disabled="${event.capacity == 0}">
+                            <span th:if="${event.capacity > 0}">Book Your Spot</span>
+                            <span th:if="${event.capacity == 0}">Waitlist Full</span>
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a th:href="@{/user/dashboard}" class="btn btn-outline-secondary">&larr; Back to All Events</a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
 </body>
 </html>
