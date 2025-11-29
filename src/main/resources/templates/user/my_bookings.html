@@ -1,31 +1,59 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
 <head>
     <title>My Bookings</title>
 </head>
 <body>
-<h1>My Bookings</h1>
-<table border="1">
-    <tr>
-        <th>Event</th>
-        <th>Date</th>
-        <th>Location</th>
-        <th>Status</th>
-        <th>Actions</th>
-    </tr>
-    <tr th:each="booking : ${bookings}">
-        <td th:text="${booking.event.title}"></td>
-        <td th:text="${booking.event.eventDate}"></td>
-        <td th:text="${booking.event.location}"></td>
-        <td th:text="${booking.status}"></td>
-        <td>
-            <form th:action="@{'/user/booking/cancel/' + ${booking.id}}" method="post"
-                  th:if="${booking.status == T(com.example.plevent.model.BookingStatus).CONFIRMED}">
-                <button type="submit">Cancel</button>
-            </form>
-        </td>
-    </tr>
-</table>
-<a href="/user/dashboard">Back to Dashboard</a>
+
+<div layout:fragment="content">
+
+    <h2 class="mb-4 text-primary">My Bookings</h2>
+
+    <table class="table table-hover table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>Event</th>
+            <th>Date</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="booking : ${bookings}">
+            <td th:text="${booking.event.title}"></td>
+
+            <td th:text="${#temporals.format(booking.event.eventDate, 'MMM dd, yyyy HH:mm')}"></td>
+
+            <td th:text="${booking.event.location}"></td>
+
+            <td>
+                    <span th:classappend="${booking.status.name() == 'CONFIRMED' ? 'bg-success' : 'bg-danger'}"
+                          class="badge text-uppercase"
+                          th:text="${booking.status}">
+                    </span>
+            </td>
+
+            <td>
+                <form th:action="@{'/user/booking/cancel/' + ${booking.id}}" method="post"
+                      th:if="${booking.status.name() == T(com.example.plevent.model.BookingStatus).CONFIRMED.name()}">
+                    <button type="submit"
+                            class="btn btn-sm btn-outline-danger"
+                            onclick="return confirm('Are you sure you want to cancel your booking for ' + '[[${booking.event.title}]]' + '?');">
+                        Cancel
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{/user/dashboard}" class="btn btn-secondary mt-3">
+        &larr; Back to Events
+    </a>
+
+</div>
 </body>
 </html>

@@ -50,6 +50,11 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>nz.net.ultraq.thymeleaf</groupId>
+            <artifactId>thymeleaf-layout-dialect</artifactId>
+        </dependency>
+
         <!-- Thymeleaf + Security -->
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>

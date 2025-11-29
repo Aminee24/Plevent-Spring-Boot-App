@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<nav th:fragment="header" class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+
+        <th:block sec:authorize="isAuthenticated()">
+            <th:block th:with="homeUrl=${
+                #authorization.expression('hasRole(''ROLE_ADMIN'')') ? '/admin/dashboard' :
+                (#authorization.expression('hasRole(''ROLE_ORGANIZER'')') ? '/organizer/dashboard' :
+                (#authorization.expression('hasRole(''ROLE_USER'')') ? '/user/dashboard' : '/'))
+            }">
+                <a class="navbar-brand" th:href="@{${homeUrl}}">Plevent</a>
+            </th:block>
+        </th:block>
+
+        <th:block sec:authorize="!isAuthenticated()">
+            <a class="navbar-brand" th:href="@{/}">Plevent</a>
+        </th:block>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item" sec:authorize="hasRole('USER')">
+                    <a class="nav-link" th:href="@{/user/dashboard}">All Events</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyRole('USER', 'ORGANIZER')">
+                    <a class="nav-link" th:href="@{/user/bookings}">My Bookings</a>
+                </li>
+
+                <li class="nav-item" sec:authorize="hasRole('ORGANIZER')">
+                    <a class="nav-link" th:href="@{/organizer/dashboard}">My Events</a>
+                </li>
+
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link" th:href="@{/admin/dashboard}">Admin Panel</a>
+                </li>
+
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link btn btn-outline-danger btn-sm ms-2" th:href="@{/logout}">Logout</a>
+                </li>
+                <li class="nav-item" sec:authorize="!isAuthenticated()">
+                    <a class="nav-link btn btn-primary btn-sm ms-2" th:href="@{/login}">Login</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<footer th:fragment="footer" class="bg-light text-center text-lg-start mt-auto">
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+        © 2025 Plevent - Built with Spring Boot & Thymeleaf.
+    </div>
+</footer>
+
+</body>
+</html>
